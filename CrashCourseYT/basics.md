@@ -52,3 +52,15 @@ events {
    - `nginx`
 2. use the reload command instead of stop (does it all in 1 step instead of two)
    -  `nginx -s reload`
+
+---
+### Setting up Nginx as a layer 7 proxy
+
+Setting up a few very simple node apps via docker. the `-e` flag is for environment variable, which is internally used by our app
+
+```
+docker run --name nodeapp1 -p 2210:9999 -e APPID=2210 -d nodeapp
+docker run --name nodeapp2 -p 2220:9999 -e APPID=2220 -d nodeapp
+docker run --name nodeapp3 -p 2230:9999 -e APPID=2230 -d nodeapp
+docker run --name nodeapp4 -p 2240:9999 -e APPID=2240 -d nodeapp
+```

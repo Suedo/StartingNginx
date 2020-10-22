@@ -1,6 +1,6 @@
 ##### Notes are based on [this Youtube Video](https://www.youtube.com/watch?v=hcw-NjOh8r0)
 ---
-### What is NginX
+### **What is NginX**
 
 1. Web Server
    -  Serves web content
@@ -10,14 +10,14 @@
    - Caching
 
 ---
-### Layer 4 & 7 proxying
+### **Layer 4 & 7 proxying**
 
 - Nginx can operate as a proxy in layer 7 (http) as well as layer 4 (tcp)
 - Using `stream` context it becomes a Layer 4 proxy
 - Using `http` context, it becomes a later 7 proxy
 
 ---
-### Mac Installation using brew
+### **Mac Installation using brew**
 
 brew reinstall nginx
 
@@ -26,7 +26,7 @@ Docroot is: /usr/local/var/www
 The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that nginx can run without sudo.
 
 ---
-### Creating your own nginx.conf
+### **Creating your own nginx.conf**
 
 This is a barebones nginx.conf that you need, to get a valid page when you hit http://localhost:8000/
 
@@ -44,7 +44,7 @@ events {
 ```
 
 ---
-### How to reload nginx:
+### **How to reload nginx:**
 
 1. stop Nginx and restart
    - `nginx -s stop`
@@ -53,7 +53,7 @@ events {
    -  `nginx -s reload`
 
 ---
-### Setting up Nginx as a layer 7 proxy
+### **Setting up Nginx as a layer 7 proxy**
 
 Setting up a few very simple node apps via docker. the `-e` flag is for environment variable, which is internally used by our app
 
@@ -71,3 +71,8 @@ Now, as per the `layer7.nginx.conf` file, what we have done is:
 3. Each time we request a packet to nginx, it round robins the request to one of the 4 node apps
 
 Note that Browsers connection ends at Nginx, we do not comminicate with the apps directly, thus effectily setting up a Layer 7 (HTTP) proxy
+
+**Overriding default load balancing** : 
+By adding `ip_hash` to the first line of the `upstream` block in the `layer7.nginx.conf` file, we can change the load balancing to be ip hash based, instead of default round-robin. As such, connections will be sticky, where a browser from one ip will always be talking one specific app behind the nginx proxy. This is a stateful connection, and can be used where we need to maintain some state in between connections.
+
+A side note, given the prevalence of kubernetes and similar scaling solutions, keeping sticky/state-based connections can be a bad idea, so choose with caution.

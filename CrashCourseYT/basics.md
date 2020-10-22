@@ -26,7 +26,6 @@ Docroot is: /usr/local/var/www
 The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that nginx can run without sudo.
 
 ---
-
 ### Creating your own nginx.conf
 
 This is a barebones nginx.conf that you need, to get a valid page when you hit http://localhost:8000/
@@ -64,3 +63,11 @@ docker run --name nodeapp2 -p 2220:9999 -e APPID=2220 -d nodeapp
 docker run --name nodeapp3 -p 2230:9999 -e APPID=2230 -d nodeapp
 docker run --name nodeapp4 -p 2240:9999 -e APPID=2240 -d nodeapp
 ```
+
+Now, as per the `layer7.nginx.conf` file, what we have done is:
+
+1. Our Browser is setting up a TCP connection with nginx
+2. Nginx sets up 4 individual connection with the 4 node apps
+3. Each time we request a packet to nginx, it round robins the request to one of the 4 node apps
+
+Note that Browsers connection ends at Nginx, we do not comminicate with the apps directly, thus effectily setting up a Layer 7 (HTTP) proxy

@@ -1,4 +1,4 @@
-##### Notes are based on [this Youtube Video](https://www.youtube.com/watch?v=hcw-NjOh8r0)
+### Notes taken from this [Youtube Video by Hussein Nasser](https://www.youtube.com/watch?v=hcw-NjOh8r0)
 ---
 ### **What is NginX**
 
@@ -73,6 +73,35 @@ Now, as per the `layer7.nginx.conf` file, what we have done is:
 Note that Browsers connection ends at Nginx, we do not comminicate with the apps directly, thus effectily setting up a Layer 7 (HTTP) proxy
 
 **Overriding default load balancing** : 
-By adding `ip_hash` to the first line of the `upstream` block in the `layer7.nginx.conf` file, we can change the load balancing to be ip hash based, instead of default round-robin. As such, connections will be sticky, where a browser from one ip will always be talking one specific app behind the nginx proxy. This is a stateful connection, and can be used where we need to maintain some state in between connections.
+By adding `ip_hash` to the first line of the `upstream` block in the `layer7.nginx.conf` **file**, we can change the load balancing to be ip hash based, instead of default round-robin. As such, connections will be sticky, where a browser from one ip will always be talking one specific app behind the nginx proxy. This is a stateful connection, and can be used where we need to maintain some state in between connections.
 
 A side note, given the prevalence of kubernetes and similar scaling solutions, keeping sticky/state-based connections can be a bad idea, so choose with caution.
+
+### **Splitting load to specific groups/cluster of backends**
+
+Earlier we had an `upstream` with all the backend servers in it, and we would round-robin through them. However, if specific sections of the app, in our case `/app1`, experience higher traffic etc, we might want them to have extra power. Thus, for these specific sections, we can provide a cluster of backends, and traffic would round robin between this subset. Below is a snippet of nginx.conf: 
+
+```
+  # all available servers
+  upstream allbackend {
+    server 127.0.0.1:2210;
+    server 127.0.0.1:2220;
+    server 127.0.0.1:2230;
+    server 127.0.0.1:2240;
+  }
+
+  # smaller subset for heavy load on app1
+  upstream backend1 {
+    server 127.0.0.1:2210;
+    server 127.0.0.1:2220;
+  }
+
+  server {
+.
+.
+  # route traffic to app1 to a specific cluster
+    location /app1 {
+      proxy_pass http://backend1;
+    }
+  }
+```

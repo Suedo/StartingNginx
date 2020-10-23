@@ -105,3 +105,7 @@ Earlier we had an `upstream` with all the backend servers in it, and we would ro
     }
   }
 ```
+
+### **Layer 7 Proxy**
+
+When using a layer 4 proxy, Nginx does a NAT (probably) and decides that from now onwards, all requests from one source ip and port, will go to one particular backend. As a result, refreshing does not change the backend we hit, until the browser/nginx decides that a new TCP connection will be used, when we may hit another backend.

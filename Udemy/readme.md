@@ -50,3 +50,17 @@ sudo ln -s /mnt/e/code/suedo/StartingNginx/Udemy/lb_nginx.conf /etc/nginx/nginx.
 needed to give full paths like this, else was not working
 
 
+### Default logs
+
+If no access_log or error_log is mentioned in the nginx.conf, the below logs in /var/log/nginx is used
+
+```shell
+➜  nginx l /var/log/nginx                                                                                       @15:24:58 
+total 84K
+drwxr-xr-x 2 root     adm    4.0K Jul 30 13:38 .
+drwxrwxr-x 8 root     syslog 4.0K Jul 30 13:38 ..
+-rw-r----- 1 www-data adm     53K Jul 31 15:23 access.log
+-rw-r----- 1 www-data adm     16K Jul 31 15:23 error.log
+```
+
+**Note**: a 404 is a properly valid response, and will not be present in the error logs. (unless nginx had some problems and failed while serving it)

@@ -1,0 +1,81 @@
+version: "3.8"
+services: 
+  webbox1:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=3001
+      - BOX_NAME=webbox1
+    ports: 
+      - 13001:3001
+  webbox2:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=3002
+      - BOX_NAME=webbox2
+    ports: 
+      - 13002:3002
+
+  appbox1:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=8001
+      - BOX_NAME=appbox1
+    ports: 
+      - 14001:8001
+  appbox2:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=8002
+      - BOX_NAME=appbox2
+    ports: 
+      - 14002:8002
+
+  dbbox1:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=8011
+      - BOX_NAME=dbbox1
+    ports: 
+      - 15001:8011
+  dbbox2:
+    build: 
+      context: ./app
+    environment: 
+      - PORT=8012
+      - BOX_NAME=dbbox2
+    ports: 
+      - 15002:8012
+
+
+  nginx_webbox:
+    restart: always
+    build: 
+      context: ./nginx_1
+    ports:
+      - 3000:3000
+  nginx_appbox:
+    restart: always
+    build: 
+      context: ./nginx_2
+    ports:
+      - 8000:8000
+  nginx_dbbox:
+    restart: always
+    build: 
+      context: ./nginx_3
+    ports:
+      - 8010:8010
+
+
+
+      
+
+# Links that helped
+# https://ashwin9798.medium.com/nginx-with-docker-and-node-js-a-beginners-guide-434fe1216b6b
+# https://auth0.com/blog/load-balancing-nodejs-applications-with-nginx-and-docker/
+# https://stackoverflow.com/questions/56308574/how-can-i-use-nginx-for-load-balancer-simple-node-js-with-docker-compose
